@@ -48,21 +48,21 @@ def yy():
             except:
                 pass
     elif x > 1:
-        q = []
-        qs = []
+        q = []#一行
+        qs = []#合併一行
         q2 = []
         for i in range(4):
             q.append(src)
         for i in range(x * 4 - len(frames)):
-            frames.append(src)
+            frames.append(src)#先放圖 以防出錯
         while True:
-            for j in range(x):
-                for i in range(4):
+            for j in range(x):#假如用座標來看 這邊代表Y軸
+                for i in range(4):#X軸
                     q[i] = frames[j*4+i]
-                qs = np.hstack(q)
+                qs = np.hstack(q)#合併X軸
                 q2.append(qs)
-            qf = np.vstack(q2)
-            q2 = []
+            qf = np.vstack(q2)#合併Y軸，完成一幀
+            q2 = []#重製
             ret, buffer = cv2.imencode('.jpg', qf)
             frame = buffer.tobytes()
             p = (b'--frame\r\n'
