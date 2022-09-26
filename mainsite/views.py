@@ -7,10 +7,15 @@ import numpy as np
 from django.http import HttpResponse
 import threading
 import time
+import math
+global src
 
+src = cv2.imread("C:/Users/Gslab/Desktop/c109112107/django/django/55555.jpg")
+src = cv2.resize(src,(480,270))
 def job(video,i):
+    global p
+
     if len(a) == 1:
-        global p
         while True:
             success, frame = video.read()  
             frame = cv2.resize(frame, (480, 270))
@@ -19,28 +24,52 @@ def job(video,i):
             p = (b'--frame\r\n'
                 b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
     else: 
-        success, frame = video.read()  
-        frame = cv2.resize(frame, (480, 270))
-        frames.append(frame)
+        frames.append(src)
         while True:
-            success, frame = video.read()  
-            frame = cv2.resize(frame, (480, 270))
             try:
+                success, frame = video.read()  
+                frame = cv2.resize(frame, (480, 270))
                 frames[i] = frame            
             except:
                 pass
 
 def yy():
+    x = math.ceil(len(a) / 4)
     global p  
-    while True:
-        try:
-            frame = np.hstack(frames)
-            ret, buffer = cv2.imencode('.jpg', frame)
+    d = 0
+    if x == 1:
+        print('ok2')
+        while True:
+            try:
+                frame = np.hstack(frames)
+                ret, buffer = cv2.imencode('.jpg', frame)
+                frame = buffer.tobytes()
+                p = (b'--frame\r\n'
+                        b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+            except:
+                pass
+    elif x > 1:
+        q = []
+        qs = []
+        q2 = []
+        for i in range(4):
+            q.append(src)
+        for i in range(x * 4 - len(frames)):
+            frames.append(src)
+        while True:
+            for j in range(x):
+                for i in range(4):
+                    q[i] = frames[j*4+i]
+                qs = np.hstack(q)
+                q2.append(qs)
+            qf = np.vstack(q2)
+            q2 = []
+            ret, buffer = cv2.imencode('.jpg', qf)
             frame = buffer.tobytes()
             p = (b'--frame\r\n'
                     b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-        except:
-            pass
+        
+
     
 def homepage(request):
     posts = Post.objects.all()
@@ -54,11 +83,12 @@ def gen(camera):
     for i in range(ii):
         camera = a[i]
         video=cv2.VideoCapture()
-        video.open(camera)
+        video.open(camera)  
         print("streaming live feed of ",camera)
         threads.append(threading.Thread(target = job, args = (video,i)))
         threads[i].start()    
     if ii>1:
+        print('ok')
         tt = threading.Thread(target = yy, args = ())
         tt.start()
     while True:
@@ -72,7 +102,8 @@ def camerafeed(request):
     return StreamingHttpResponse(gen("camera"),content_type="multipart/x-mixed-replace;boundary=frame")
 
 # /views
-global a,b,frames
+global a,b,frames,x
+x = 0
 a = []
 b = []
 frames = []
