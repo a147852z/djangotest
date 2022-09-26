@@ -38,7 +38,6 @@ def yy():
     global p  
     d = 0
     if x == 1:
-        print('ok2')
         while True:
             try:
                 frame = np.hstack(frames)
@@ -77,7 +76,7 @@ def homepage(request):
     word = "1123"
     return render(request, 'index.html', locals())
 def gen(camera):
-    print('len:',len(a))
+    print('stream:',len(a))
     ii = len(a)
     threads = []
     for i in range(ii):
@@ -88,7 +87,6 @@ def gen(camera):
         threads.append(threading.Thread(target = job, args = (video,i)))
         threads[i].start()    
     if ii>1:
-        print('ok')
         tt = threading.Thread(target = yy, args = ())
         tt.start()
     while True:
@@ -115,7 +113,7 @@ def test_view(request):
         data_from_html2 = request.POST.get('word2')
         if not data_from_html=="":
             a.append(request.POST.get('word'))
-            HttpResponse(f'views得到表单数据{data_from_html}')
+            HttpResponse(f'views得到表單數據{data_from_html}')
             print(request.POST.get('word'))
             b.append("img"+str(len(a)))
         try:
@@ -124,5 +122,5 @@ def test_view(request):
                 a.pop(int(data_from_html2)-1)
         except:
             pass
-    python_data = "python里的数据"
+    python_data = "python裡的數據"
     return render(request, "index.html", {"html_data_name":python_data,"list":a})
