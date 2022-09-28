@@ -24,7 +24,8 @@ def job(video,i):
             p = (b'--frame\r\n'
                 b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
     else: 
-        frames.append(src)
+        if len(frames)<i:
+            frames.append(src)
         while True:
             try:
                 success, frame = video.read()  
