@@ -24,7 +24,7 @@ def job(video,i):
             p = (b'--frame\r\n'
                 b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
     else: 
-        if len(frames)<i:
+        if len(frames)<i+1:
             frames.append(src)
         while True:
             try:
@@ -71,11 +71,11 @@ def yy():
         
 
     
-def homepage(request):
-    posts = Post.objects.all()
-    now = datetime.now()
-    word = "1123"
-    return render(request, 'index.html', locals())
+# def homepage(request):
+#     posts = Post.objects.all()
+#     now = datetime.now()
+#     word = "1123"
+#     return render(request, 'index.html', locals())
 def gen(camera):
     print('stream:',len(a))
     ii = len(a)
@@ -125,3 +125,4 @@ def test_view(request):
             pass
     python_data = "python裡的數據"
     return render(request, "index.html", {"html_data_name":python_data,"list":a})
+
